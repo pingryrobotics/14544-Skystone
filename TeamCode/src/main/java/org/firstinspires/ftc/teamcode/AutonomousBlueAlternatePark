@@ -130,6 +130,15 @@ public class AutonomousBlueAlternatePark extends LinearOpMode {
         leftFront.setPower(0.8);
         while (leftFront.isBusy() && rightFront.isBusy() && rightRear.isBusy() && leftRear.isBusy() && opModeIsActive()) {
             // nothing
+             telemetry.addData("leftfrontposition", leftFront.getCurrentPosition());
+            telemetry.addData("leftfronttarget", leftFront.getTargetPosition());
+            telemetry.addData("rightfrontposition", rightFront.getCurrentPosition());
+            telemetry.addData("rightfrontarget", rightFront.getTargetPosition());
+            telemetry.addData("leftrearposition",leftRear.getCurrentPosition());
+            telemetry.addData("leftreartarget",leftRear.getTargetPosition());
+            telemetry.addData("rightrearposition",rightRear.getCurrentPosition());
+            telemetry.addData("rightreartarget",rightRear.getTargetPosition());
+            telemetry.update();
         }
         leftRear.setPower(0);
         rightRear.setPower(0);
