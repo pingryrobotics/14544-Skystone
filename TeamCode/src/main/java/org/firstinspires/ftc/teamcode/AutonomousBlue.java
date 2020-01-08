@@ -36,20 +36,20 @@ public class AutonomousBlue extends LinearOpMode {
             // 588 = 1 rotation
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
-            inches = -11;
+            inches = -13;
             Ticks = (int) (62.4 * inches);
-            endoderStrafe(2);
+            endoderStrafe(1);
             sleep(1);
             inches = 26.5;
             Ticks = (int) (62.4 * inches);
-            encoderStraight();
+            encoderStraight(2);
             sleep(2);
             HornServoR.setPosition(0.3);
             HornServoL.setPosition(0.85);
             sleep(200);
             inches = -30;
             Ticks = (int) (62.4 * inches);
-            encoderStraight();
+            encoderStraight(2);
             sleep(2);
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
@@ -100,7 +100,7 @@ public class AutonomousBlue extends LinearOpMode {
     /**
      * Describe this function...
      */
-    private void encoderStraight() {
+    private void encoderStraight(int timeout) {
         // positive forward, negative backward
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
