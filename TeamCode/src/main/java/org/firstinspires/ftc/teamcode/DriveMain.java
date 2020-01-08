@@ -111,6 +111,7 @@ public class DriveMain extends OpMode {
         if (gamepad2.dpad_right){
             intake.finger();
         }
+
         if (gamepad2.dpad_up){
             intake.latmovement();
         }

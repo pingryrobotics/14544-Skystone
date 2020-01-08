@@ -37,10 +37,13 @@ public class AutonomousBlueFar extends LinearOpMode {
             // 588 = 1 rotation
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
+            inches = 18;
+            Ticks = (int) (62.4*inches);
+            encoderStraight();
             inches = -75;
             Ticks = (int) (62.4 * inches);
-            endoderStrafe(2);
-            inches = 27;
+            encoderStrafe(2);
+            inches = 9;
             Ticks = (int) (62.4 * inches);
             encoderStraight();
             sleep(2);
@@ -53,16 +56,22 @@ public class AutonomousBlueFar extends LinearOpMode {
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
             sleep(2);
-            inches = 39;
+            inches = 30;
             Ticks = (int) (62.4 * inches);
-            endoderStrafe(2);
+            encoderStrafe(2);
+            inches = 20;
+            Ticks = (int) (62.4 * inches);
+            encoderStraight();
+            inches = -14;
+            Ticks = (int) (62.4 * inches);
+            encoderStrafe(2);
         }
     }
 
     /**
      * Describe this function...
      */
-    private void endoderStrafe(int timeout) {
+    private void encoderStrafe(int timeout) {
         // positive right, negative left
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -122,6 +131,15 @@ public class AutonomousBlueFar extends LinearOpMode {
         leftFront.setPower(0.8);
         while (leftFront.isBusy() && rightFront.isBusy() && rightRear.isBusy() && leftRear.isBusy() && opModeIsActive()) {
             // nothing
+            telemetry.addData("leftfrontposition", leftFront.getCurrentPosition());
+            telemetry.addData("leftfronttarget", leftFront.getTargetPosition());
+            telemetry.addData("rightfrontposition", rightFront.getCurrentPosition());
+            telemetry.addData("rightfrontarget", rightFront.getTargetPosition());
+            telemetry.addData("leftrearposition",leftRear.getCurrentPosition());
+            telemetry.addData("leftreartarget",leftRear.getTargetPosition());
+            telemetry.addData("rightrearposition",rightRear.getCurrentPosition());
+            telemetry.addData("rightreartarget",rightRear.getTargetPosition());
+            telemetry.update();
         }
         leftRear.setPower(0);
         rightRear.setPower(0);

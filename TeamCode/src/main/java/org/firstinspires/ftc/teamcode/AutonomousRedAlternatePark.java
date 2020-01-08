@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name = "autonomousRed (Blocks to Java)", group = "")
-public class AutonomousRed extends LinearOpMode {
+public class AutonomousRedAlternatePark extends LinearOpMode {
 
     private DcMotor leftRear;
     private DcMotor rightRear;
@@ -89,7 +89,13 @@ public class AutonomousRed extends LinearOpMode {
             sleep(200);
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
-            inches = -40.5;
+            inches = -20.5;
+            Ticks = (int) (62.4 * inches);
+            encoderStrafe(2);
+            inches = 18;
+            Ticks = (int) (62.4 * inches);
+            encoderStraight();
+            inches = -20;
             Ticks = (int) (62.4 * inches);
             encoderStrafe(2);
         }
@@ -122,10 +128,10 @@ public class AutonomousRed extends LinearOpMode {
             telemetry.addData("leftfronttarget", leftFront.getTargetPosition());
             telemetry.addData("rightfrontposition", rightFront.getCurrentPosition());
             telemetry.addData("rightfrontarget", rightFront.getTargetPosition());
-            telemetry.addData("leftrearposition",leftRear.getCurrentPosition());
-            telemetry.addData("leftreartarget",leftRear.getTargetPosition());
-            telemetry.addData("rightrearposition",rightRear.getCurrentPosition());
-            telemetry.addData("rightreartarget",rightRear.getTargetPosition());
+            telemetry.addData("leftrearposition", leftRear.getCurrentPosition());
+            telemetry.addData("leftreartarget", leftRear.getTargetPosition());
+            telemetry.addData("rightrearposition", rightRear.getCurrentPosition());
+            telemetry.addData("rightreartarget", rightRear.getTargetPosition());
             telemetry.update();
         }
         leftRear.setPower(0);

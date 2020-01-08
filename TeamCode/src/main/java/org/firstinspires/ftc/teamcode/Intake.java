@@ -16,8 +16,8 @@ public class Intake {
     private Servo wrist;
     private Servo finger;
     private Servo lat;
-    private Servo pusherLeft;
-    private Servo pusherRight;
+    private Servo pushbarLeft;
+    private Servo pushbarRight;
     private Servo hornLeft;
     private Servo hornRight;
     public Intake(HardwareMap hardwareMap){
@@ -26,8 +26,8 @@ public class Intake {
         wrist = hardwareMap.get(Servo.class, "WristServo");
         finger = hardwareMap.get(Servo.class, "FingerServo");
         lat = hardwareMap.get(Servo.class, "LatServo");
-       pusherRight = hardwareMap.get(Servo.class, "PushbarServoRight");
-       pusherLeft = hardwareMap.get(Servo.class, "PushbarServoLeft");
+       pushbarRight = hardwareMap.get(Servo.class, "PushbarServoRight");
+       pushbarLeft = hardwareMap.get(Servo.class, "PushbarServoLeft");
        hornRight = hardwareMap.get(Servo.class, "HornServoR");
        hornLeft = hardwareMap.get(Servo.class, "HornServoL");
     }
@@ -96,14 +96,14 @@ public class Intake {
     
     //The pushers extend, allowing thet robot to move bricks
     public void pushersOut (){
-        pusherLeft.setPosition(0.4);
-        pusherRight.setPosition(0.1);
+        pushbarLeft.setPosition(0.4);
+        pushbarRight.setPosition(0.1);
     }
        
     //The pushers go inwards, allowing the robot to get closer for stacking
     public void pushersIn (){
-        pusherLeft.setPosition(0);
-        pusherRight.setPosition(0);
+        pushbarLeft.setPosition(0);
+        pushbarRight.setPosition(0);
     }
     
     //The servos in the front of the robot that are used for autonomous go down

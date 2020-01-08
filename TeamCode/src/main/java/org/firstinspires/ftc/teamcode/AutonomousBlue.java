@@ -42,14 +42,14 @@ public class AutonomousBlue extends LinearOpMode {
             sleep(1);
             inches = 26.5;
             Ticks = (int) (62.4 * inches);
-            encoderStraight();
+            encoderStraight(2);
             sleep(2);
             HornServoR.setPosition(0.3);
             HornServoL.setPosition(0.85);
             sleep(200);
             inches = -30;
             Ticks = (int) (62.4 * inches);
-            encoderStraight();
+            encoderStraight(2);
             sleep(2);
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
@@ -100,7 +100,7 @@ public class AutonomousBlue extends LinearOpMode {
     /**
      * Describe this function...
      */
-    private void encoderStraight() {
+    private void encoderStraight(int timeout) {
         // positive forward, negative backward
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -124,6 +124,15 @@ public class AutonomousBlue extends LinearOpMode {
         leftFront.setPower(0.8);
         while (leftFront.isBusy() && rightFront.isBusy() && rightRear.isBusy() && leftRear.isBusy() && opModeIsActive()) {
             // nothing
+            telemetry.addData("leftfrontposition", leftFront.getCurrentPosition());
+            telemetry.addData("leftfronttarget", leftFront.getTargetPosition());
+            telemetry.addData("rightfrontposition", rightFront.getCurrentPosition());
+            telemetry.addData("rightfrontarget", rightFront.getTargetPosition());
+            telemetry.addData("leftrearposition",leftRear.getCurrentPosition());
+            telemetry.addData("leftreartarget",leftRear.getTargetPosition());
+            telemetry.addData("rightrearposition",rightRear.getCurrentPosition());
+            telemetry.addData("rightreartarget",rightRear.getTargetPosition());
+            telemetry.update();
         }
         leftRear.setPower(0);
         rightRear.setPower(0);
