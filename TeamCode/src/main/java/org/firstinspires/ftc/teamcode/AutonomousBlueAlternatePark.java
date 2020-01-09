@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "autonomousBlue (Blocks to Java)", group = "")
+@Autonomous(name = "AutonomousBlueAlternatePark", group = "")
 public class AutonomousBlueAlternatePark extends LinearOpMode {
 
     private Servo HornServoR;
