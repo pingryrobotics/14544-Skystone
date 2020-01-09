@@ -35,8 +35,6 @@ public class DriveMain extends OpMode {
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        
-
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftRear.setDirection(DcMotor.Direction.REVERSE);

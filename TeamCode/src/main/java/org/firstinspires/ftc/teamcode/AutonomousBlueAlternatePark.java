@@ -1,5 +1,26 @@
-private double inches;
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@Autonomous(name = "autonomousBlue (Blocks to Java)", group = "")
+public class AutonomousBlueAlternatePark extends LinearOpMode {
+
+    private Servo HornServoR;
+    private Servo HornServoL;
+    private DcMotor leftRear;
+    private DcMotor rightRear;
+    private DcMotor rightFront;
+    private DcMotor leftFront;
+    private int Ticks;
+    private double inches;
     private ElapsedTime t = new ElapsedTime();
+    /**
+     * This function is executed when this Op Mode is selected from the Driver Station.
+     */
     @Override
     public void runOpMode() {
         HornServoR = hardwareMap.servo.get("HornServoR");
@@ -15,26 +36,33 @@ private double inches;
             // 588 = 1 rotation
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
-            inches = -75;
+            inches = -11;
             Ticks = (int) (62.4 * inches);
             encoderStrafe(2);
-            inches = 27;
+            sleep(1);
+            inches = 26.5;
             Ticks = (int) (62.4 * inches);
             encoderStraight();
             sleep(2);
             HornServoR.setPosition(0.3);
             HornServoL.setPosition(0.85);
-            sleep(500);
-            inches = -29;
+            sleep(200);
+            inches = -30;
             Ticks = (int) (62.4 * inches);
             encoderStraight();
+            sleep(2);
             HornServoR.setPosition(0.9);
             HornServoL.setPosition(0.2);
             sleep(2);
-            inches = -42;
+            inches = -20;
             Ticks = (int) (62.4 * inches);
             encoderStrafe(2);
-
+            inches = 18;
+            Ticks = (int) (62.4 * inches);
+            encoderStraight();
+            inches = -22;
+            Ticks =  (int) (62.4 * inches);
+            encoderStrafe(2);
         }
     }
 
@@ -63,7 +91,7 @@ private double inches;
         rightRear.setPower(0.8);
         rightFront.setPower(0.8);
         leftFront.setPower(0.8);
-        while (leftFront.isBusy() && true && rightRear.isBusy() && leftRear.isBusy() && opModeIsActive()) {
+        while (leftFront.isBusy() && rightFront.isBusy() && rightRear.isBusy() && leftRear.isBusy() && opModeIsActive()) {
             // nothing
         }
         leftRear.setPower(0);
@@ -72,6 +100,7 @@ private double inches;
         rightFront.setPower(0);
         leftRear.setPower(2);
         leftFront.setPower(3);
+        sleep(200);
     }
 
     /**
@@ -119,3 +148,4 @@ private double inches;
         leftFront.setPower(3);
     }
 }
+
