@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "autonomousRedFar (Blocks to Java)", group = "")
+@Autonomous(name = "AutonomousRedFar", group = "")
 public class AutonomousRedFar extends LinearOpMode {
 
     private Servo HornServoR;
