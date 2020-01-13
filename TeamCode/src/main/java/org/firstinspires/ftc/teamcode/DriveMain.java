@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "DriveMain", group = "Iterative Opmode")
 public class DriveMain extends OpMode {
-    
+
     //set the motors
     //imports the DC motor 
     private Intake intake;
@@ -25,11 +25,28 @@ public class DriveMain extends OpMode {
     private DcMotor rightRear = null;
     private DcMotor leftFront = null;
     private DcMotor rightFront = null;
-    
-   
-    public void init(){
-        intake = new Intake (hardwareMap);
-        
+    private DcMotor left;
+    private DcMotor right;
+    private Servo wrist;
+    private Servo finger;
+    private Servo lat;
+    private Servo pushbarLeft;
+    private Servo pushbarRight;
+    private Servo hornLeft;
+    private Servo hornRight;
+
+
+    public void init() {
+        left = hardwareMap.get(DcMotor.class, "ShoulderMotor");
+        right = hardwareMap.get(DcMotor.class, "WinchMotor");
+        wrist = hardwareMap.get(Servo.class, "WristServo");
+        finger = hardwareMap.get(Servo.class, "FingerServo");
+        lat = hardwareMap.get(Servo.class, "LatServo");
+        pushbarRight = hardwareMap.get(Servo.class, "PushbarServoRight");
+        pushbarLeft = hardwareMap.get(Servo.class, "PushbarServoLeft");
+        hornRight = hardwareMap.get(Servo.class, "HornServoR");
+        hornLeft = hardwareMap.get(Servo.class, "HornServoL");
+
         //names the motors
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
@@ -41,91 +58,78 @@ public class DriveMain extends OpMode {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
-
-        telemetry.addData("Status","Initialized");
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telemetry.addData("Status", "Initialized");
 
     }
-    public void loop(){
+
+    public void loop() {
         // Helps with the drive controls, determines direction of wheels
         double theta = Math.atan2(-gamepad1.left_stick_y, -gamepad1.left_stick_x);
-        double magnitude = Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        double magnitude = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
         double turn = -Range.clip(gamepad1.right_stick_x, -1, 1);
-        double rf = Math.sin(theta + (Math.PI/4)) * magnitude;
-        double lf = Math.sin(theta - (Math.PI/4)) * magnitude;
-        double rb = Math.sin(theta - (Math.PI/4)) * magnitude;
-        double lb = Math.sin(theta + (Math.PI/4)) * magnitude;
-        
+        double rf = Math.sin(theta + (Math.PI / 4)) * magnitude;
+        double lf = Math.sin(theta - (Math.PI / 4)) * magnitude;
+        double rb = Math.sin(theta - (Math.PI / 4)) * magnitude;
+        double lb = Math.sin(theta + (Math.PI / 4)) * magnitude;
+
         //Also helps set direction for the wheels
         leftRear.setPower(lb - turn);
         rightRear.setPower(rb + turn);
         leftFront.setPower(lf - turn);
         rightFront.setPower(rf + turn);
-        
-        /*Intake
-        States that if the right bumper is pressed (on Gamepad 2)
-        the arm should raise itself
-        Please see Intake.java for function of "raisearm"*/
-        if (gamepad2.right_bumper){
-            intake.raisearm();
-        }
-        
-        //States that if the left bumper is pressed (on Gamepad 2)
-        //the arm should go down
-        //Please see Intake.java for function of "retractarm"
-        if (gamepad2.right_trigger >= 0.7){
-            intake.retractarm();
-        }
-        
-        //States that if the left trigger is pressed (on Gamepad 2)
-        //the arm should move in 
-        //Please see Intake.java for function of "moveArmIn"
-        if (gamepad2.left_bumper){
-            intake.moveArmIn();
-        }
-        
-        //States that if the left trigger is pressed (on Gamepad 2)
-        //the arm should move out 
-        //Please see Intake.java for function of "moveArmOut"
-        if (gamepad2.left_trigger >= 0.7){
-            intake.moveArmOut ();
-        }
-        
-        //Kill switch
-        //if the dpad down is pressed (on Gamepad 2)
-        //every function (on the arm) will stop
-        if (gamepad2.dpad_down){
-            intake.stopall ();
-        }
-        
-        //States that if the dpad left is pressed (on Gamepad 2)
-        //the wrist will move
-        //Please see Intake.java for function of "wrist"
-        if (gamepad2.dpad_left){
-            intake.wrist ();
-        }
-        
-        //States that if the dpad right is pressed (on Gamepad 2)
-        //the finger will move
-        if (gamepad2.dpad_right){
-            intake.finger();
+
+        double x = Math.atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x);
+        double y = Math.hypot(gamepad2.left_stick_x, gamepad2.left_stick_y);
+        double a = -Range.clip(gamepad2.right_stick_x, -1, 1);
+        double b = Math.sin(x + (Math.PI / 4)) * magnitude;
+        double c = Math.sin(x - (Math.PI / 4)) * magnitude;
+        double d = Math.sin(x - (Math.PI / 4)) * magnitude;
+        double e = Math.sin(x + (Math.PI / 4)) * magnitude;
+
+        left.setPower(d + a);
+        right.setPower(c + a);
+
+        if(gamepad2.dpad_down){
+            intake.latreverse();
         }
         if (gamepad2.dpad_up){
             intake.latmovement();
         }
-        
+        if (gamepad2.dpad_right){
+            intake.wrist();
+        }
+        if (gamepad2.dpad_left){
+            intake.wristreset();
+        }
         if (gamepad2.a){
-            intake.wristreset ();
+            intake.latstop();
         }
-        if (gamepad2.b){
-            intake.fingerreset ();
+        if (gamepad2.right_bumper){
+            intake.horndeploy();
         }
-        if (gamepad2.a){
-            intake.latstop ();
+        if (gamepad2.right_trigger>0.3){
+            intake.hornretract();
         }
-        
-        if (gamepad2.y){
-            intake.latreverse ();
+        if (gamepad2.left_bumper){
+            intake.pushersOut();
         }
-        
+        if (gamepad2.left_trigger>0.3){
+            intake.pushersIn();
+        }
+
+        telemetry.addData("leftfrontPower", leftFront.getPower());
+        telemetry.addData("rightfrontPower", rightFront.getPower());
+        telemetry.addData("leftrearPower",leftRear.getPower());
+        telemetry.addData("rightrearPower",rightRear.getPower());
+        telemetry.addData("ArmPower",left.getPower());
+        telemetry.addData("WinchPower",right.getPower());
+        telemetry.addData("Arm Position (degrees)",right.getCurrentPosition()/(28*40));
+        telemetry.addData("PushbarRightPosition", pushbarRight.getPosition());
+        telemetry.addData("PushbarLeftPosition", pushbarLeft.getPosition());
+        telemetry.addData("HornRightPosition",hornRight.getPosition());
+        telemetry.addData("HornLeftPosition",hornLeft.getPosition());
+        telemetry.update();
+        telemetry.update();
     }
 }
