@@ -4,19 +4,18 @@
 
 package org.firstinspires.ftc.teamcode;
 
-//Import 
+//Import
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+//Declaration of DriveMain
 @TeleOp(name = "DriveMain", group = "Iterative Opmode")
 public class DriveMain extends OpMode {
-    
+
     //set the motors
     //imports the DC motor 
     private Intake intake;
@@ -25,110 +24,118 @@ public class DriveMain extends OpMode {
     private DcMotor rightRear = null;
     private DcMotor leftFront = null;
     private DcMotor rightFront = null;
-    
-   
-    public void init(){
-        intake = new Intake (hardwareMap);
-        
+    private DcMotor left;
+    private DcMotor right;
+    private Servo wrist;
+    private Servo finger;
+    private Servo block;
+    private Servo hornLeft;
+    private Servo hornRight;
+    private Servo lat;
+
+
+    //Declaration of all motors, servos, etc
+    public void init() {
+        left = hardwareMap.get(DcMotor.class, "ShoulderMotor");
+        right = hardwareMap.get(DcMotor.class, "WinchMotor");
+        wrist = hardwareMap.get(Servo.class, "WristServo");
+        finger = hardwareMap.get(Servo.class, "FingerServo");
+        hornRight = hardwareMap.get(Servo.class, "HornServoR");
+        hornLeft = hardwareMap.get(Servo.class, "HornServoL");
+        lat = hardwareMap.get(Servo.class, "LatServo");
+        block = hardwareMap.get(Servo.class, "colorArmServo");
+
         //names the motors
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        
-
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telemetry.addData("Status", "Initialized");
 
-        telemetry.addData("Status","Initialized");
-
+        //declaration of Intake.java (although never used)
+        intake = new Intake(hardwareMap);
     }
-    public void loop(){
+
+    public void loop() {
         // Helps with the drive controls, determines direction of wheels
         double theta = Math.atan2(-gamepad1.left_stick_y, -gamepad1.left_stick_x);
-        double magnitude = Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        double magnitude = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
         double turn = -Range.clip(gamepad1.right_stick_x, -1, 1);
-        double rf = Math.sin(theta + (Math.PI/4)) * magnitude;
-        double lf = Math.sin(theta - (Math.PI/4)) * magnitude;
-        double rb = Math.sin(theta - (Math.PI/4)) * magnitude;
-        double lb = Math.sin(theta + (Math.PI/4)) * magnitude;
-        
+        double rf = Math.sin(theta + (Math.PI / 4)) * magnitude;
+        double lf = Math.sin(theta - (Math.PI / 4)) * magnitude;
+        double rb = Math.sin(theta - (Math.PI / 4)) * magnitude;
+        double lb = Math.sin(theta + (Math.PI / 4)) * magnitude;
+
         //Also helps set direction for the wheels
         leftRear.setPower(lb - turn);
         rightRear.setPower(rb + turn);
         leftFront.setPower(lf - turn);
         rightFront.setPower(rf + turn);
-        
-        /*Intake
-        States that if the right bumper is pressed (on Gamepad 2)
-        the arm should raise itself
-        Please see Intake.java for function of "raisearm"*/
-        if (gamepad2.right_bumper){
-            intake.raisearm();
+
+        if (gamepad1.right_bumper){
+            block.setPosition (0);
         }
-        
-        //States that if the left bumper is pressed (on Gamepad 2)
-        //the arm should go down
-        //Please see Intake.java for function of "retractarm"
-        if (gamepad2.right_trigger >= 0.7){
-            intake.retractarm();
+        if (gamepad1.left_bumper){
+            block.setPosition(1);
         }
-        
-        //States that if the left trigger is pressed (on Gamepad 2)
-        //the arm should move in 
-        //Please see Intake.java for function of "moveArmIn"
-        if (gamepad2.left_bumper){
-            intake.moveArmIn();
+        if (gamepad1.right_trigger>0.7){
+            hornRight.setPosition(0.9);
+            hornLeft.setPosition(0.1);
         }
-        
-        //States that if the left trigger is pressed (on Gamepad 2)
-        //the arm should move out 
-        //Please see Intake.java for function of "moveArmOut"
-        if (gamepad2.left_trigger >= 0.7){
-            intake.moveArmOut ();
-        }
-        
-        //Kill switch
-        //if the dpad down is pressed (on Gamepad 2)
-        //every function (on the arm) will stop
-        if (gamepad2.dpad_down){
-            intake.stopall ();
-        }
-        
-        //States that if the dpad left is pressed (on Gamepad 2)
-        //the wrist will move
-        //Please see Intake.java for function of "wrist"
-        if (gamepad2.dpad_left){
-            intake.wrist ();
-        }
-        
-        //States that if the dpad right is pressed (on Gamepad 2)
-        //the finger will move
-        if (gamepad2.dpad_right){
-            intake.finger();
+        if (gamepad1.left_trigger>0.7){
+            hornRight.setPosition(0.1);
+            hornLeft.setPosition(0.9);
         }
 
+        double x = Math.atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x);
+        double magic = Math.hypot (gamepad2.left_stick_x, gamepad2.left_stick_y);
+        double movement = -Range.clip(gamepad2.left_stick_x, -1, 1);
+        double arm = Math.sin(x - (Math.PI / 4)) * magic;
+
+        left.setPower(arm - movement);
+
+
+
+
+        if (gamepad2.dpad_down){
+            intake.finger();
+        }
         if (gamepad2.dpad_up){
-            intake.latmovement();
+            intake.fingerreset();
         }
-        
-        if (gamepad2.a){
-            intake.wristreset ();
+        if (gamepad2.right_bumper){
+            lat.setPosition(0.8);
         }
-        if (gamepad2.b){
-            intake.fingerreset ();
+        if (gamepad2.right_trigger>0.7){
+            lat.setPosition(0.2);
         }
-        if (gamepad2.a){
-            intake.latstop ();
+        if (gamepad2.dpad_left){
+            lat.setPosition (0.5);
         }
-        
+        if (gamepad2.left_bumper){
+            wrist.setPosition (0.7);
+        }
+        if (gamepad2.left_trigger>0.7){
+            wrist.setPosition (0.3);
+        }
+        if (gamepad2.dpad_right){
+            wrist.setPosition (0.5);
+        }
+
+        if (gamepad2.x){
+            hornLeft.setPosition (0.4);
+            hornRight.setPosition(0.6);
+        }
         if (gamepad2.y){
-            intake.latreverse ();
+            hornLeft.setPosition(0.9);
+            hornRight.setPosition(0.1);
         }
-        
     }
 }
